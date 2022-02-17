@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Branch;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class BranchController extends Controller
 {
@@ -15,9 +16,17 @@ class BranchController extends Controller
      */
     public function index()
     {
-        return [
-            'foobar' => 'fsdfs'
-        ];
+        try {
+            $selectArr = [
+                'id', 'branch_code', 'name', 'email',
+                'mobile', 'contact_person_name',
+                'contact_person_mobile',
+                DB::raw('IF(is_active, "Active", "Inactive") AS status')
+            ];
+            return Branch::select($selectArr)->cursorPaginate(5)->withQueryString();
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -102,6 +111,14 @@ class BranchController extends Controller
      */
     public function destroy(Branch $branch)
     {
-        //
+        try {
+            if ($branch->delete()) {
+                return response()->json(['message' => 'success', 'status' => true], 200);
+            } else {
+                return response()->json(['message' => 'something_wrong', 'status' => true], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }

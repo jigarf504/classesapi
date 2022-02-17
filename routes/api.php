@@ -18,9 +18,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('branch',[App\Http\Controllers\BranchController::class,'store'])->name('branch.save');
 Route::get('branch',[App\Http\Controllers\BranchController::class,'index'])->name('branch.list');
 Route::get('branch/{branch}',[App\Http\Controllers\BranchController::class,'show'])->name('branch.show');
-Route::get('branch/{id}/edit',[App\Http\Controllers\BranchController::class,'edit'])->name('branch.edit');
+Route::post('branch',[App\Http\Controllers\BranchController::class,'store'])->name('branch.save');
 Route::put('branch/{branch}',[App\Http\Controllers\BranchController::class,'update'])->name('branch.update');
-Route::delete('branch/{id}',[App\Http\Controllers\BranchController::class,'delete'])->name('branch.destroy');
+Route::delete('branch/{branch}',[App\Http\Controllers\BranchController::class,'destroy'])->name('branch.destroy');
+
+Route::get('course',[App\Http\Controllers\CourseController::class,'index'])->name('course.list');
+Route::get('course/{course}',[App\Http\Controllers\CourseController::class,'show'])->name('course.show');
+Route::post('course',[App\Http\Controllers\CourseController::class,'store'])->name('course.save');
+Route::put('course/{course}',[App\Http\Controllers\CourseController::class,'update'])->name('course.update');
+Route::delete('course/{course}',[App\Http\Controllers\CourseController::class,'destory'])->name('course.destroy');
