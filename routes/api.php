@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('branch',[App\Http\Controllers\BranchController::class,'store'])->name('branch.save');
 Route::get('branch',[App\Http\Controllers\BranchController::class,'index'])->name('branch.list');
-Route::get('branch/{id}',[App\Http\Controllers\BranchController::class,'show'])->name('branch.show');
+Route::get('branch/{branch}',[App\Http\Controllers\BranchController::class,'show'])->name('branch.show');
 Route::get('branch/{id}/edit',[App\Http\Controllers\BranchController::class,'edit'])->name('branch.edit');
-Route::put('branch/{id}',[App\Http\Controllers\BranchController::class,'update'])->name('branch.update');
+Route::put('branch/{branch}',[App\Http\Controllers\BranchController::class,'update'])->name('branch.update');
 Route::delete('branch/{id}',[App\Http\Controllers\BranchController::class,'delete'])->name('branch.destroy');

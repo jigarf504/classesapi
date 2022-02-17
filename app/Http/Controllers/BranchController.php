@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use Illuminate\Support\Facades\Validator;
+
 class BranchController extends Controller
 {
     /**
@@ -13,17 +15,9 @@ class BranchController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        
+        return [
+            'foobar' => 'fsdfs'
+        ];
     }
 
     /**
@@ -34,7 +28,21 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), (new Branch)->rules);
+
+            if ($validator->fails()) {
+                return response()->json(["message" => $validator->messages()], 201);
+            }
+
+            if (Branch::create($request->all())) {
+                return response()->json(["message" => 'success', 'success' => true], 201);
+            } else {
+                return response()->json(["error" => true, 'message' => 'something_wrong'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -45,18 +53,15 @@ class BranchController extends Controller
      */
     public function show(Branch $branch)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Branch  $branch
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Branch $branch)
-    {
-        //
+        try {
+            if ($branch) {
+                return response()->json(['data' => $branch, 'status' => true], 200);
+            } else {
+                return response()->json(['data' => null, 'status' => false], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -68,7 +73,25 @@ class BranchController extends Controller
      */
     public function update(Request $request, Branch $branch)
     {
-        //
+        try {
+            $rulesArr = $branch->rules;
+            if (isset($rulesArr['name'])) {
+                $rulesArr['name'] = "required|unique:branches,name,$branch->id|max:125";
+            }
+            $validator = Validator::make($request->all(), $rulesArr);
+
+            if ($validator->fails()) {
+                return response()->json(["message" => $validator->messages()], 201);
+            }
+
+            if ($branch->update($request->all())) {
+                return response()->json(['message' => 'success', 'status' => true], 200);
+            } else {
+                return response()->json(['message' => 'something_wrong', 'status' => true], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     /**
