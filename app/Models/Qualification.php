@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Qualification extends Model
 {
     use HasFactory;
-    public $fillable = ['name'];
+    public $fillable = ['name','is_active'];
 }

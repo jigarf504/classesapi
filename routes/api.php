@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,5 +33,6 @@ Route::delete('course/{course}',[App\Http\Controllers\CourseController::class,'d
 Route::get('qualification',[App\Http\Controllers\QualificationController::class,'index'])->name('qualification.list');
 Route::get('qualification/{qualification}',[App\Http\Controllers\QualificationController::class,'show'])->name('qualification.show');
 Route::post('qualification',[App\Http\Controllers\QualificationController::class,'store'])->name('qualification.save');
+Route::post('qualification/status/{qualification}',[App\Http\Controllers\QualificationController::class,'updateStatus'])->name('qualification.updatestatus');
 Route::put('qualification/{qualification}',[App\Http\Controllers\QualificationController::class,'update'])->name('qualification.update');
 Route::delete('qualification/{qualification}',[App\Http\Controllers\QualificationController::class,'destory'])->name('qualification.destroy');

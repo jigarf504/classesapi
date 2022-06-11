@@ -74,6 +74,20 @@ class QualificationController extends Controller
         }
     }
 
+    public function updateStatus(Request  $request,Qualification $qualification) {
+        try {
+            $statusArr = ['is_active' => $request->status === 'active' ? 1 : 0];
+            if ($qualification->update($statusArr)) {
+                return response()->json(['message' => 'status_updated', 'status' => true], 200);
+            } else {
+                return response()->json(['message' => 'something_wrong', 'status' => true], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+        dd($request->all(),$qualification);
+    }
+
     public function destory(Qualification $qualification)
     {
         try {

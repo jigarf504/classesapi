@@ -19,7 +19,7 @@ class Course extends Model
 
     public $rules = [
         'name' => 'required|unique:courses|max:125',
-        'course_code' => 'required',
+        'course_code' => 'required|max:5',
         'full_payment' => 'required|numeric',
         'installment_payment' => 'required|numeric',
         'course_template' => 'required'

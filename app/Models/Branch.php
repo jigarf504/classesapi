@@ -10,14 +10,14 @@ class Branch extends Model
     use HasFactory;
     public $fillable = ['name', 'email', 'address', 'state', 'city', 'branch_code', 'mobile', 'contact_person_name', 'contact_person_mobile','phone', 'contact_person_email'];
 
-    public $rules = [
+    public array $rules = [
         'name' => 'required|unique:branches|max:125',
         'email' => 'required|email',
         'mobile' => 'required|digits:10',
         'phone' => 'nullable|numeric',
         'address' => 'required',
         'city' => 'required',
-        'branch_code' => 'required',
+        'branch_code' => 'required|max:5',
         'state' => 'required',
         'contact_person_name' => 'required|max:50',
     ];

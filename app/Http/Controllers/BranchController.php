@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
@@ -12,7 +14,7 @@ class BranchController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
@@ -32,10 +34,10 @@ class BranchController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         try {
             $validator = Validator::make($request->all(), (new Branch)->rules);
@@ -57,10 +59,10 @@ class BranchController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Branch  $branch
-     * @return \Illuminate\Http\Response
+     * @param Branch $branch
+     * @return JsonResponse
      */
-    public function show(Branch $branch)
+    public function show(Branch $branch) : JsonResponse
     {
         try {
             if ($branch) {
@@ -76,11 +78,11 @@ class BranchController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Branch  $branch
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Branch $branch
+     * @return JsonResponse
      */
-    public function update(Request $request, Branch $branch)
+    public function update(Request $request, Branch $branch) : JsonResponse
     {
         try {
             $rulesArr = $branch->rules;
@@ -106,10 +108,10 @@ class BranchController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Branch  $branch
-     * @return \Illuminate\Http\Response
+     * @param Branch $branch
+     * @return JsonResponse
      */
-    public function destroy(Branch $branch)
+    public function destroy(Branch $branch) : JsonResponse
     {
         try {
             if ($branch->delete()) {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Course;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
 
 class CourseController extends Controller
 {
@@ -23,7 +24,7 @@ class CourseController extends Controller
         }
     }
 
-    public function show(Course $course)
+    public function show(Course $course) : JsonResponse
     {
         try {
             if ($course) {
@@ -36,7 +37,7 @@ class CourseController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
         try {
             $validator = Validator::make($request->all(), (new Course)->rules);
@@ -54,7 +55,7 @@ class CourseController extends Controller
         }
     }
 
-    public function update(Request $request, Course $course)
+    public function update(Request $request, Course $course) : JsonResponse
     {
         try {
             $rulesArr = (new Course)->rules;
@@ -77,7 +78,7 @@ class CourseController extends Controller
         }
     }
 
-    public function destory(Course $course)
+    public function destory(Course $course) : JsonResponse
     {
         try {
             if ($course->delete()) {
