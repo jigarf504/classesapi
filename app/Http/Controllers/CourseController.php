@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Course;
+use Exception;
+use Illuminate\Http\{JsonResponse, Request};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\JsonResponse;
 
 class CourseController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
         try {
             $selectArr = [
@@ -18,44 +18,55 @@ class CourseController extends Controller
                 'installment_payment',
                 DB::raw('IF(is_active, "Active", "Inactive") AS status')
             ];
-            return Course::select($selectArr)->cursorPaginate(5)->withQueryString();
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            $courses = Course::select($selectArr)->cursorPaginate(5)->withQueryString();
+            $data = [];
+            if ($courses) {
+                $data = [
+                    'data' => $courses,
+                    'message' => 'course details',
+                    'status' => true
+                ];
+            } else {
+                $data = [
+                    'data' => null,
+                    'message' => self::ERROR_MSG,
+                    'status' => false
+                ];
+            }
+            return response()->json($data);
+        } catch (Exception $e) {
+            return $this->getCatchErrorMessage($e);
         }
     }
 
-    public function show(Course $course) : JsonResponse
+    public function show(Course $course): JsonResponse
     {
         try {
-            if ($course) {
-                return response()->json(['data' => $course, 'status' => true], 200);
-            } else {
-                return response()->json(['data' => null, 'status' => false], 404);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json(['data' => $course, 'data' => 'course detail', 'status' => true], 200);
+        } catch (Exception $e) {
+            return $this->getCatchErrorMessage($e);
         }
     }
 
-    public function store(Request $request) : JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
             $validator = Validator::make($request->all(), (new Course)->rules);
             if ($validator->fails()) {
-                return response()->json(["message" => $validator->messages()], 201);
+                return $this->getValidationErrorMessageAndResponse($validator->messages());
             }
 
-            if (Course::create($request->all())) {
-                return response()->json(["message" => 'success', 'success' => true], 201);
+            if ($course = Course::create($request->all())) {
+                return response()->json(["message" => 'course is added successfully.!!', 'data' => $course, 'status' => true], 201);
             } else {
-                return response()->json(["error" => true, 'message' => 'something_wrong'], 500);
+                return response()->json(["status" => false, 'message' => self::ERROR_MSG, 'data' => null], 500);
             }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            return $this->getCatchErrorMessage($e);
         }
     }
 
-    public function update(Request $request, Course $course) : JsonResponse
+    public function update(Request $request, Course $course): JsonResponse
     {
         try {
             $rulesArr = (new Course)->rules;
@@ -65,29 +76,29 @@ class CourseController extends Controller
 
             $validator = Validator::make($request->all(), $rulesArr);
             if ($validator->fails()) {
-                return response()->json(["message" => $validator->messages()], 201);
+                return $this->getValidationErrorMessageAndResponse($validator->messages()->toArray());
             }
 
             if ($course->update($request->all())) {
-                return response()->json(["message" => 'success', 'success' => true], 201);
+                return response()->json(["message" => 'The course is updated successfully.!!','data' => $course->refresh(), 'status' => true], 200);
             } else {
-                return response()->json(["error" => true, 'message' => 'something_wrong'], 500);
+                return response()->json(["status" => false, 'message' => self::ERROR_MSG,'data' => null], 200);
             }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            return $this->getCatchErrorMessage($e);
         }
     }
 
-    public function destory(Course $course) : JsonResponse
+    public function destory(Course $course): JsonResponse
     {
         try {
             if ($course->delete()) {
-                return response()->json(['message' => 'success', 'status' => true], 200);
+                return response()->json(['message' => 'The course detail is deleted successfully.!!','data' => null, 'status' => true], 200);
             } else {
-                return response()->json(['message' => 'something_wrong', 'status' => true], 500);
+                return response()->json(['message' => self::ERROR_MSG,'data' => null, 'status' => false], 500);
             }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            return $this->getCatchErrorMessage($e);
         }
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\StudentRegistration;
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request,JsonResponse};
 
 class StudentRegistrationController extends Controller
 {
@@ -12,9 +12,13 @@ class StudentRegistrationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index() : JsonResponse
     {
-        //
+        try {
+            return response()->json(['message' => self::ERROR_MSG,'data' => null, 'status' => false], 500);
+        } catch (\Exception $e) {
+            return $this->getCatchErrorMessage($e);
+        }
     }
 
     /**
@@ -22,9 +26,13 @@ class StudentRegistrationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create() : JsonResponse
     {
-        //
+        try {
+            return response()->json(['message' => self::ERROR_MSG,'data' => null, 'status' => false], 500);
+        } catch (\Exception $e) {
+            return $this->getCatchErrorMessage($e);
+        }
     }
 
     /**
@@ -33,9 +41,13 @@ class StudentRegistrationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
-        //
+        try {
+            return response()->json(['message' => self::ERROR_MSG,'data' => null, 'status' => false], 500);
+        } catch (\Exception $e) {
+            return $this->getCatchErrorMessage($e);
+        }
     }
 
     /**
@@ -44,9 +56,13 @@ class StudentRegistrationController extends Controller
      * @param  \App\Models\StudentRegistration  $studentRegistration
      * @return \Illuminate\Http\Response
      */
-    public function show(StudentRegistration $studentRegistration)
+    public function show(StudentRegistration $studentRegistration) : JsonResponse
     {
-        //
+        try {
+            return response()->json(['message' => self::ERROR_MSG,'data' => null, 'status' => false], 500);
+        } catch (\Exception $e) {
+            return $this->getCatchErrorMessage($e);
+        }
     }
 
     /**
@@ -55,9 +71,13 @@ class StudentRegistrationController extends Controller
      * @param  \App\Models\StudentRegistration  $studentRegistration
      * @return \Illuminate\Http\Response
      */
-    public function edit(StudentRegistration $studentRegistration)
+    public function edit(StudentRegistration $studentRegistration) : JsonResponse
     {
-        //
+        try {
+            return response()->json(['message' => self::ERROR_MSG,'data' => null, 'status' => false], 500);
+        } catch (\Exception $e) {
+            return $this->getCatchErrorMessage($e);
+        }
     }
 
     /**
@@ -67,9 +87,13 @@ class StudentRegistrationController extends Controller
      * @param  \App\Models\StudentRegistration  $studentRegistration
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, StudentRegistration $studentRegistration)
+    public function update(Request $request, StudentRegistration $studentRegistration) : JsonResponse
     {
-        //
+        try {
+            return response()->json(['message' => self::ERROR_MSG,'data' => null, 'status' => false], 500);
+        } catch (\Exception $e) {
+            return $this->getCatchErrorMessage($e);
+        }
     }
 
     /**
@@ -78,8 +102,12 @@ class StudentRegistrationController extends Controller
      * @param  \App\Models\StudentRegistration  $studentRegistration
      * @return \Illuminate\Http\Response
      */
-    public function destroy(StudentRegistration $studentRegistration)
+    public function destroy(StudentRegistration $studentRegistration) : JsonResponse
     {
-        //
+        try {
+            return response()->json(['message' => self::ERROR_MSG,'data' => null, 'status' => false], 500);
+        } catch (\Exception $e) {
+            return $this->getCatchErrorMessage($e);
+        }
     }
 }

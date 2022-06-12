@@ -1,5 +1,6 @@
-    <?php
+<?php
 
+use App\Http\Controllers\{BranchController, CourseController, QualificationController};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,22 +18,26 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-//--------------Branch---------------------------
-Route::get('branch',[App\Http\Controllers\BranchController::class,'index'])->name('branch.list');
-Route::get('branch/{branch}',[App\Http\Controllers\BranchController::class,'show'])->name('branch.show');
-Route::post('branch',[App\Http\Controllers\BranchController::class,'store'])->name('branch.save');
-Route::put('branch/{branch}',[App\Http\Controllers\BranchController::class,'update'])->name('branch.update');
-Route::delete('branch/{branch}',[App\Http\Controllers\BranchController::class,'destroy'])->name('branch.destroy');
-//--------------Course---------------------------
-Route::get('course',[App\Http\Controllers\CourseController::class,'index'])->name('course.list');
-Route::get('course/{course}',[App\Http\Controllers\CourseController::class,'show'])->name('course.show');
-Route::post('course',[App\Http\Controllers\CourseController::class,'store'])->name('course.save');
-Route::put('course/{course}',[App\Http\Controllers\CourseController::class,'update'])->name('course.update');
-Route::delete('course/{course}',[App\Http\Controllers\CourseController::class,'destory'])->name('course.destroy');
-//--------------Qualification---------------------------
-Route::get('qualification',[App\Http\Controllers\QualificationController::class,'index'])->name('qualification.list');
-Route::get('qualification/{qualification}',[App\Http\Controllers\QualificationController::class,'show'])->name('qualification.show');
-Route::post('qualification',[App\Http\Controllers\QualificationController::class,'store'])->name('qualification.save');
-Route::post('qualification/status/{qualification}',[App\Http\Controllers\QualificationController::class,'updateStatus'])->name('qualification.updatestatus');
-Route::put('qualification/{qualification}',[App\Http\Controllers\QualificationController::class,'update'])->name('qualification.update');
-Route::delete('qualification/{qualification}',[App\Http\Controllers\QualificationController::class,'destory'])->name('qualification.destroy');
+Route::controller(BranchController::class)->group(function () {
+    Route::get('/branch/{branch}', 'show')->name('branch.show');
+    Route::post('/branch', 'store')->name('branch.save');
+    Route::put('/branch/{branch}', 'update')->name('branch.update');
+    Route::delete('/branch/{branch}', 'destroy')->name('branch.destroy');
+});
+
+Route::controller(CourseController::class)->prefix('course')->group(function () {
+    Route::get('', 'index')->name('course.list');
+    Route::get('/{course}', 'show')->name('course.show');
+    Route::post('', 'store')->name('course.save');
+    Route::put('/{course}', 'update')->name('course.update');
+    Route::delete('/{course}', 'destory')->name('course.destroy');
+});
+
+Route::controller(QualificationController::class)->prefix('course')->group(function () {
+    Route::get('', 'index')->name('qualification.list');
+    Route::get('{qualification}', 'show')->name('qualification.show');
+    Route::post('', 'store')->name('qualification.save');
+    Route::post('/status/{qualification}', 'updateStatus')->name('qualification.updatestatus');
+    Route::put('/{qualification}', 'update')->name('qualification.update');
+    Route::delete('{qualification}', 'destory')->name('qualification.destroy');
+});

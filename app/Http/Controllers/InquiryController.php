@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Inquiry;
-use Illuminate\Http\Request;
+use Illuminate\Http\{Request,JsonResponse};
 
 class InquiryController extends Controller
 {
@@ -12,7 +12,7 @@ class InquiryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index() : JsonResponse
     {
         //
     }
@@ -22,7 +22,7 @@ class InquiryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create() : JsonResponse
     {
         //
     }
@@ -33,7 +33,7 @@ class InquiryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
         //
     }
@@ -44,7 +44,7 @@ class InquiryController extends Controller
      * @param  \App\Models\Inquiry  $inquiry
      * @return \Illuminate\Http\Response
      */
-    public function show(Inquiry $inquiry)
+    public function show(Inquiry $inquiry) : JsonResponse
     {
         //
     }
@@ -55,7 +55,7 @@ class InquiryController extends Controller
      * @param  \App\Models\Inquiry  $inquiry
      * @return \Illuminate\Http\Response
      */
-    public function edit(Inquiry $inquiry)
+    public function edit(Inquiry $inquiry) : JsonResponse
     {
         //
     }
@@ -67,7 +67,7 @@ class InquiryController extends Controller
      * @param  \App\Models\Inquiry  $inquiry
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Inquiry $inquiry)
+    public function update(Request $request, Inquiry $inquiry) : JsonResponse
     {
         //
     }
@@ -78,7 +78,7 @@ class InquiryController extends Controller
      * @param  \App\Models\Inquiry  $inquiry
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Inquiry $inquiry)
+    public function destroy(Inquiry $inquiry) : JsonResponse
     {
         //
     }

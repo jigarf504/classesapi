@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Models\Branch;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
+use Exception;
+use Illuminate\Http\{JsonResponse};
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class BranchController extends Controller
 {
@@ -16,7 +16,7 @@ class BranchController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
         try {
             $selectArr = [
@@ -25,16 +25,32 @@ class BranchController extends Controller
                 'contact_person_mobile',
                 DB::raw('IF(is_active, "Active", "Inactive") AS status')
             ];
-            return Branch::select($selectArr)->cursorPaginate(5)->withQueryString();
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+
+            $branches = Branch::select($selectArr)->cursorPaginate(5)->withQueryString();
+            $data = [];
+            if ($branches) {
+                $data = [
+                    'data' => $branches,
+                    'message' => 'Branches details',
+                    'status' => true
+                ];
+            } else {
+                $data = [
+                    'data' => null,
+                    'message' => self::ERROR_MSG,
+                    'status' => false
+                ];
+            }
+            return response()->json($data);
+        } catch (Exception $e) {
+            return response()->json(['message' => self::ERROR_MSG, 'status' => false, 'data' => null], 500);
         }
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
     public function store(Request $request): JsonResponse
@@ -43,16 +59,16 @@ class BranchController extends Controller
             $validator = Validator::make($request->all(), (new Branch)->rules);
 
             if ($validator->fails()) {
-                return response()->json(["message" => $validator->messages()], 201);
+                return $this->getValidationErrorMessageAndResponse($this->modifyErrorMessage($validator->messages()->toArray()));
             }
-
-            if (Branch::create($request->all())) {
-                return response()->json(["message" => 'success', 'success' => true], 201);
+            $branch = Branch::create($request->all());
+            if ($branch) {
+                return response()->json(["message" => 'Branch is created successfully.', 'status' => true, 'data' => $branch], 201);
             } else {
-                return response()->json(["error" => true, 'message' => 'something_wrong'], 500);
+                return response()->json(["status" => false, 'message' => self::ERROR_MSG, 'data' => null], 500);
             }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            return $this->getCatchErrorMessage($e);
         }
     }
 
@@ -62,16 +78,12 @@ class BranchController extends Controller
      * @param Branch $branch
      * @return JsonResponse
      */
-    public function show(Branch $branch) : JsonResponse
+    public function show(Branch $branch): JsonResponse
     {
         try {
-            if ($branch) {
-                return response()->json(['data' => $branch, 'status' => true], 200);
-            } else {
-                return response()->json(['data' => null, 'status' => false], 404);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            return response()->json(['data' => $branch, 'message' => 'Branch data', 'status' => true], 200);
+        } catch (Exception $e) {
+            return $this->getCatchErrorMessage($e);
         }
     }
 
@@ -82,7 +94,7 @@ class BranchController extends Controller
      * @param Branch $branch
      * @return JsonResponse
      */
-    public function update(Request $request, Branch $branch) : JsonResponse
+    public function update(Request $request, Branch $branch): JsonResponse
     {
         try {
             $rulesArr = $branch->rules;
@@ -92,16 +104,16 @@ class BranchController extends Controller
             $validator = Validator::make($request->all(), $rulesArr);
 
             if ($validator->fails()) {
-                return response()->json(["message" => $validator->messages()], 201);
+                return $this->getValidationErrorMessageAndResponse($validator->messages()->toArray());
             }
 
             if ($branch->update($request->all())) {
-                return response()->json(['message' => 'success', 'status' => true], 200);
+                return response()->json(['message' => 'Branch detail is updated successfully.!!', 'data' => $branch->refresh(), 'status' => true], 200);
             } else {
-                return response()->json(['message' => 'something_wrong', 'status' => true], 500);
+                return response()->json(['message' => self::ERROR_MSG, 'data' => null, 'status' => true], 500);
             }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            return $this->getValidationErrorMessageAndResponse($e);
         }
     }
 
@@ -111,16 +123,16 @@ class BranchController extends Controller
      * @param Branch $branch
      * @return JsonResponse
      */
-    public function destroy(Branch $branch) : JsonResponse
+    public function destroy(Branch $branch): JsonResponse
     {
         try {
             if ($branch->delete()) {
-                return response()->json(['message' => 'success', 'status' => true], 200);
+                return response()->json(['message' => 'Branch is deleted successfully.!!', 'data' => null, 'status' => true], 200);
             } else {
-                return response()->json(['message' => 'something_wrong', 'status' => true], 500);
+                return response()->json(['message' => self::ERROR_MSG, 'data' => null, 'status' => true], 500);
             }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+        } catch (Exception $e) {
+            return $this->getValidationErrorMessageAndResponse($e);
         }
     }
 }
